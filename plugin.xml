@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<!-- plugin.xml file written by dynaTrace Client 4.2.0 -->
+<plugin>
+  <extension point="com.dynatrace.diagnostics.pdk.pluginconfig" id="com.dynatrace.CouchbaseMonitor" name="Couchbase Monitor">
+    <information>
+      <category value="" />
+      <displayname value="Couchbase Monitor" />
+      <description value="This plugin will open a stream with a Couchbase host for JSON based Couchbase metrics." />
+      <supportlevel value="unsupported" />
+    </information>
+    <configuration>
+      <property key="Type" label="Monitor Type" type="list" description="My property description ..." default="Bucket">
+        <list>
+          <item value="Bucket" />
+        </list>
+      </property>
+      <property key="SSL" label="http/https" type="list" description="My property description ..." default="http">
+        <list>
+          <item value="http" />
+          <item value="https" />
+        </list>
+      </property>
+      <property key="URL" label="URL" type="string" description="Path to the stream" default="/example/mystream.stream" multiline="false" />
+      <property key="Port" label="Port" type="string" description="Port on the server used by the restful interface." default="8091" multiline="false" />
+      <property key="Bucket" label="Bucket Name" type="string" description="The name of the Bucket being monitored." default="samples" multiline="false" />
+      <property key="auth" label="Authentication" type="boolean" description="Describes whether or not authentication is used for the URL." default="false" />
+      <property key="Username" label="Username" type="string" description="The username to use for authentication to the restful interface" default="" multiline="false">
+        <visibility>
+          <rule key="auth" value="true" />
+        </visibility>
+      </property>
+      <property key="Password" label="Password" type="password" description="The password for the username used to authenticate to the restful interface." default="">
+        <visibility>
+          <rule key="auth" value="true" />
+        </visibility>
+      </property>
+    </configuration>
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitor" id="com.dynatrace.CouchbaseMonitor.monitor" name="Couchbase Monitor">
+    <plugin configid="com.dynatrace.CouchbaseMonitor" class="com.dynatrace.CouchbaseMonitor.CouchbaseMonitor" />
+  </extension>
+  <extension point="com.dynatrace.diagnostics.pdk.monitormetricgroup" id="com.dynatrace.CouchbaseMonitor.metricgroup3" name="Couchbase Stats">
+    <metricgroup monitorid="com.dynatrace.CouchbaseMonitor.monitor">
+      <metric defaultrate="purepath" name="Items" unit="number" description="Retrieves the curr_items property.  The number of items currently active on this node.  During warmup, this will be 0 until complete." />
+      <metric defaultrate="purepath" name="Memory Used" unit="bytes" description="Retrieves the mem_used property.  The current size of memory used.  If mem_used = ep_kv_size then you will get OOM_ERROR.  The mem_used must be less than ep_mem_high_wat, which is the mark at which data is ejected from disk." />
+      <metric defaultrate="purepath" name="High Watermark" unit="bytes" description="Retrieves the ep_mem_high_wat property.  The mem_used must be less than ep_mem_high_wat, which is the mark at which data is ejected from the disk." />
+      <metric defaultrate="purepath" name="Cache Fetched" unit="number" description="Retrieves the ep_bg_fetched metric." />
+      <metric defaultrate="purepath" name="Cache Retrieved" unit="number" description="Retrieves the get_hits JSON metric." />
+      <metric defaultrate="purepath" name="Active Docs Resident Ratio" unit="number" description="Retrieves the vb_active_resident_items_ratio." />
+      <metric defaultrate="purepath" name="Replica Docs Resident Ratio" unit="number" description="Retrieves the vb_replica_resident_items_ratio metric." />
+      <metric defaultrate="purepath" name="OOM per Second" unit="number" description="Retrieves the ep_tmp_oom_errors metric." />
+      <metric defaultrate="purepath" name="Memory Max" unit="bytes" description="Retrieves the ep_kv_size metric." />
+      <metric defaultrate="purepath" name="TMP OOM per Second" unit="number" description="Retrieves the ep_tmp_oom_errors metric." />
+      <metric defaultrate="purepath" name="Disk Write Queue Size" unit="number" description="Retrieves the ep_queue_size metric." />
+      <metric defaultrate="purepath" name="Disk Write Queue Flush" unit="number" description="Retrieves the ep_flusher_todo metric." />
+      <metric defaultrate="purepath" name="Disk Reads per Second" unit="number" description="Retrieves the ep_io_num_read metric." />
+      <metric defaultrate="purepath" name="Disk Writes per Second" unit="number" description="Retrieves the ep_io_num_write metric." />
+      <metric defaultrate="purepath" name="DCP Queue Items" unit="number" description="Retrieves the ep_dcp_total_queue metric." />
+      <metric defaultrate="purepath" name="Active vBucket Count" unit="number" description="Retrieves the vb_active_num metric." />
+      <metric defaultrate="purepath" name="Replica vBucket Count" unit="number" description="Retrieves the vb_replica_num Metric." />
+      <metric defaultrate="purepath" name="CPU Utilization Rate" unit="number" description="Retrieves the cpu_utilization_rate JSON value." />
+      <metric defaultrate="purepath" name="Current Connections" unit="number" description="Retrieves the curr_connections JSON value." />
+      <metric defaultrate="purepath" name="Memory Actual Used" unit="bytes" description="Retrieves the mem_actual_used JSON value." />
+      <metric defaultrate="purepath" name="EP Memory High Wat" unit="number" description="Retrieves the ep_mem_high_wat JSON value." />
+      <metric defaultrate="purepath" name="Docs Fragmentation" unit="number" description="Retrieves the couch_docs_fragmentation JSON value." />
+      <metric defaultrate="purepath" name="Command Get" unit="number" description="Retrieves the cmd_get JSON value." />
+      <metric defaultrate="purepath" name="Command Set" unit="number" description="Retrieves the cmd_set JSON value." />
+      <metric defaultrate="purepath" name="Current Items" unit="number" description="Retrieves the curr_items JSON value." />
+      <metric defaultrate="purepath" name="EP Cache Miss Rate" unit="number" description="Retrieves the ep_cache_miss_rate JSON value." />
+      <metric defaultrate="purepath" name="Get Misses" unit="number" description="Retrieves the get_misses JSON value." />
+      <metric defaultrate="purepath" name="Misses" unit="number" description="Retrieves the misses JSON value." />
+      <metric defaultrate="purepath" name="Ops" unit="number" description="Retrieves the ops JSON value." />
+    </metricgroup>
+  </extension>
+</plugin>
