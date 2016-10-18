@@ -1,24 +1,18 @@
 package com.dynatrace.CouchbaseMonitor;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Authenticator;
-import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
 import com.dynatrace.diagnostics.pdk.Status;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 
 public class Overview {
@@ -28,39 +22,40 @@ public class Overview {
 	String json;
 	boolean CouchbaseStreamSuccess = true;
 	JSONArray Temp_Array = new JSONArray();
+	JSONArray Converted_Array = new JSONArray();
 	JSONObject op = new JSONObject();
 	JSONObject samples = new JSONObject();
 	
 	//Couchbase Metrics
-    private static long items = 0;
-    private static long memoryUsed = 0;
-    private static long highWatermark = 0;
-    private static long cacheFetched = 0;
-    private static long cacheRetrieved = 0;
-    private static long activeDocsResRatio = 0;
-    private static long replicaDocsResRatio = 0;
-    private static long oomPerSecond = 0;
-    private static long tmpOOMPerSecond = 0;
-    private static long memoryMax = 0;
-    private static long diskQueueSize = 0;
-    private static long diskQueueFlush = 0;
-    private static long diskReads = 0;
-    private static long diskWrites = 0;
-    private static long dcpQueue = 0;
-    private static long activevBucket = 0;
-    private static long replicavBucket = 0;
+    private static double items = 0;
+    private static double memoryUsed = 0;
+    private static double highWatermark = 0;
+    private static double cacheFetched = 0;
+    private static double cacheRetrieved = 0;
+    private static double activeDocsResRatio = 0;
+    private static double replicaDocsResRatio = 0;
+    private static double oomPerSecond = 0;
+    private static double tmpOOMPerSecond = 0;
+    private static double memoryMax = 0;
+    private static double diskQueueSize = 0;
+    private static double diskQueueFlush = 0;
+    private static double diskReads = 0;
+    private static double diskWrites = 0;
+    private static double dcpQueue = 0;
+    private static double activevBucket = 0;
+    private static double replicavBucket = 0;
     private static double cpuUtilizationRate = 0;
-    private static long currConnections = 0;
-    private static long memActualUsed = 0;
-    private static long epMemHighWat = 0;
-    private static long couchDocsFragmentation = 0;
-    private static long cmdGet = 0;
-    private static long cmdSet = 0;
-    private static long currItems = 0;
-    private static long epCacheMissRate = 0;
-    private static long getMisses = 0;
-    private static long misses = 0;
-    private static long ops = 0;
+    private static double currConnections = 0;
+    private static double memActualUsed = 0;
+    private static double epMemHighWat = 0;
+    private static double couchDocsFragmentation = 0;
+    private static double cmdGet = 0;
+    private static double cmdSet = 0;
+    private static double currItems = 0;
+    private static double epCacheMissRate = 0;
+    private static double getMisses = 0;
+    private static double misses = 0;
+    private static double ops = 0;
     
     
 	
@@ -112,248 +107,31 @@ public class Overview {
       
         //Couchbase Metrics
         //Get Items
-        try {
-        	Temp_Array = (JSONArray) samples.get("curr_items");
-        	items = JSONArrayAnalyzer(Temp_Array);
-        	log.info("curr_items : " + items);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get Memory Used
-        try {
-	        Temp_Array = (JSONArray) samples.get("mem_used");
-	        memoryUsed = JSONArrayAnalyzer(Temp_Array);
-	        log.info("mem_used : " + memoryUsed);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get High Watermark
-        try {
-	        Temp_Array = (JSONArray) samples.get("ep_mem_high_wat");
-	        highWatermark = JSONArrayAnalyzer(Temp_Array);
-	        log.info("ep_mem_high_wat : " + highWatermark);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get Cache Fetched
-        try {
-	        Temp_Array = (JSONArray) samples.get("ep_bg_fetched");
-	        cacheFetched = JSONArrayAnalyzer(Temp_Array);
-        	log.info("ep_bg_fetched : " + cacheFetched);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        System.out.println("The return value for the ep_bg_fetched element array: " + cacheFetched);
-        
-        //Get Cached Retrieved
-        try {
-	        Temp_Array = (JSONArray) samples.get("get_hits");
-	        cacheRetrieved = JSONArrayAnalyzer(Temp_Array);
-        	log.info("get_hits : " + cacheRetrieved);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get Active Documents Resident Ratio
-        try {
-	        Temp_Array = (JSONArray) samples.get("vb_active_resident_items_ratio");
-	        activeDocsResRatio = JSONArrayAnalyzer(Temp_Array);
-	        log.info("vb_active_resident_items_ratio : " + activeDocsResRatio);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get Replica Documents Resident Ratio
-        try {
-	        Temp_Array = (JSONArray) samples.get("vb_replica_resident_items_ratio");
-	        replicaDocsResRatio = JSONArrayAnalyzer(Temp_Array);
-	        log.info("vb_replica_resident_items_ratio : " + replicaDocsResRatio);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get OOM per Second
-        try {
-	        Temp_Array = (JSONArray) samples.get("ep_oom_errors");
-	        oomPerSecond = JSONArrayAnalyzer(Temp_Array);
-        	log.info("ep_oom_errors : " + oomPerSecond);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get TMP OOM per Second
-        try {
-	        Temp_Array = (JSONArray) samples.get("ep_tmp_oom_errors");
-	        tmpOOMPerSecond = JSONArrayAnalyzer(Temp_Array);
-        	log.info("ep_tmp_oom_errors : " + tmpOOMPerSecond);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get Maximum Memory
-        try {
-	        Temp_Array = (JSONArray) samples.get("ep_kv_size");
-	        memoryMax = JSONArrayAnalyzer(Temp_Array);
-        	log.info("ep_kv_size : " + memoryMax);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get Disk Queue Size
-        try {
-	        Temp_Array = (JSONArray) samples.get("ep_queue_size");
-	        diskQueueSize = JSONArrayAnalyzer(Temp_Array);
-        	log.info("ep_queue_size : " + diskQueueSize);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get Disk Queue Flush
-        try {
-	        Temp_Array = (JSONArray) samples.get("ep_flusher_todo");
-	        diskQueueFlush = JSONArrayAnalyzer(Temp_Array);
-        	log.info("ep_flusher_todo : " + diskQueueFlush);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get Disk Reads
-        // try {
-        //Temp_Array = (JSONArray) samples.get("ep_io_num_read");
-        //diskReads = JSONArrayAnalyzer(Temp_Array);
-        //System.out.println("The return value for the ep_io_num_read element array: " + diskReads);
-        
-        //Get Disk Writes
-        // try {
-        //Temp_Array = (JSONArray) samples.get("ep_io_num_write");
-        //diskWrites = JSONArrayAnalyzer(Temp_Array);
-        //System.out.println("The return value for the ep_io_num_write element array: " + diskWrites);
-        
-        //Get DCP Queue Size
-        // try {
-        //Temp_Array = (JSONArray) samples.get("ep_dcp_total_queue");
-        //dcpQueue = JSONArrayAnalyzer(Temp_Array);
-        //System.out.println("The return value for the ep_dcp_total_queue element array: " + dcpQueue);
-        
-        //Get Active vBucket Count
-        try {
-	        Temp_Array = (JSONArray) samples.get("vb_active_num");
-	        activevBucket = JSONArrayAnalyzer(Temp_Array);
-        	log.info("vb_active_num : " + activevBucket);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get CPU Utilization Rate
-        try {
-	        Temp_Array = (JSONArray) samples.get("cpu_utilization_rate");
-	        cpuUtilizationRate = JSONArrayDoubleAnalyzer(Temp_Array);
-        	log.info("cpu_utilization_rate : " + cpuUtilizationRate);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get Current Connections
-        try {
-	        Temp_Array = (JSONArray) samples.get("curr_connections");
-	        currConnections = JSONArrayAnalyzer(Temp_Array);
-        	log.info("curr_connections : " + currConnections);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get Memory Actual Used
-        try {
-	        Temp_Array = (JSONArray) samples.get("mem_actual_used");
-	        memActualUsed = JSONArrayAnalyzer(Temp_Array);
-        	log.info("mem_actual_used : " + memActualUsed);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get EP Memory High Wat
-        try {
-	        Temp_Array = (JSONArray) samples.get("ep_mem_high_wat");
-	        epMemHighWat = JSONArrayAnalyzer(Temp_Array);
-        	log.info("ep_mem_high_wat : " + epMemHighWat);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get Couch Docs Fragementation
-        try {
-	        Temp_Array = (JSONArray) samples.get("couch_docs_fragmentation");
-	        couchDocsFragmentation = JSONArrayAnalyzer(Temp_Array);
-        	log.info("couch_docs_fragmentation : " + couchDocsFragmentation);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get Command Get
-        try {
-	        Temp_Array = (JSONArray) samples.get("cmd_get");
-	        cmdGet = JSONArrayAnalyzer(Temp_Array);
-        	log.info("cmd_get : " + cmdGet);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get Command Set
-        try {
-	        Temp_Array = (JSONArray) samples.get("cmd_set");
-	        cmdSet = JSONArrayAnalyzer(Temp_Array);
-        	log.info("cmd_set : " + cmdSet);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get Current Items
-        try {
-	        Temp_Array = (JSONArray) samples.get("curr_items");
-	        currItems = JSONArrayAnalyzer(Temp_Array);
-        	log.info("curr_items : " + currItems);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get EP Cache Miss Rate
-        try {
-	        Temp_Array = (JSONArray) samples.get("ep_cache_miss_rate");
-	        epCacheMissRate = JSONArrayAnalyzer(Temp_Array);
-        	log.info("ep_cache_miss_rate : " + epCacheMissRate);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get Get Misses
-        try {
-	        Temp_Array = (JSONArray) samples.get("get_misses");
-	        getMisses = JSONArrayAnalyzer(Temp_Array);
-        	log.info("get_misses : " + getMisses);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get Misses
-        try {
-	        Temp_Array = (JSONArray) samples.get("misses");
-	        misses = JSONArrayAnalyzer(Temp_Array);
-        	log.info("misses : " + misses);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
-        
-        //Get Ops
-        try {
-	        Temp_Array = (JSONArray) samples.get("ops");
-	        ops = JSONArrayAnalyzer(Temp_Array);
-        	log.info("ops : " + ops);
-        } catch (Exception exp){
-        	log.log(Level.SEVERE, exp.getMessage(), exp);
-        }
+        items = metricRetriever("curr_items");
+        memoryUsed = metricRetriever("mem_used");
+        highWatermark = metricRetriever("ep_mem_high_wat");
+        cacheFetched = metricRetriever("ep_bg_fetched");
+        cacheRetrieved = metricRetriever("get_hits");
+        activeDocsResRatio = metricRetriever("vb_active_resident_items_ratio");
+        replicaDocsResRatio = metricRetriever("vb_replica_resident_items_ratio");
+        oomPerSecond = metricRetriever("ep_oom_errors");
+        tmpOOMPerSecond = metricRetriever("ep_tmp_oom_errors");
+        memoryMax = metricRetriever("ep_kv_size");
+        diskQueueSize = metricRetriever("ep_queue_size");
+        diskQueueFlush = metricRetriever("ep_flusher_todo");
+        activevBucket = metricRetriever("vb_active_num");
+        cpuUtilizationRate = metricRetriever("cpu_utilization_rate");
+        currConnections = metricRetriever("curr_connections");
+        memActualUsed = metricRetriever("mem_actual_used");
+        epMemHighWat = metricRetriever("ep_mem_high_wat");
+        couchDocsFragmentation = metricRetriever("couch_docs_fragmentation");
+        cmdGet = metricRetriever("cmd_get");
+        cmdSet = metricRetriever("cmd_set");
+        currItems = metricRetriever("curr_items");
+        epCacheMissRate = metricRetriever("ep_cache_miss_rate");
+        getMisses = metricRetriever("get_misses");
+        misses = metricRetriever("misses");
+        ops = metricRetriever("ops");
 	}
 	
 	//Read JSON URL
@@ -388,125 +166,147 @@ public class Overview {
 	    }
 	}
 	
-	
-    //Average JSON array results for long values
-	public static long JSONArrayAnalyzer (JSONArray array) {
-    	long totalMetric = 0;
-    	long averageMetric = 0;
-    	long denom = 0;
-    	//Analyze array and return an average of results
-    	for(int i=0; i<array.size(); i++){
-    		long temp = (long) array.get(i);
-    		totalMetric = totalMetric + temp;
-    		if (i>0)
-    		{
-    			denom = i+1;
-    			averageMetric = totalMetric/denom;
-    		}
+	public double metricRetriever (String metricName) {
+        double metricValue = 0;
+        //Long longMetricValue;
+		try {
+        	log.fine("Begin arrray evaluation (" + metricName + ")");
+        	Temp_Array = (JSONArray) samples.get(metricName);
+        	log.fine("Attempting to get component type (" + metricName + ")");
+        	Object Temp_Array_Type = Temp_Array.get(0);
+        	if (Temp_Array_Type instanceof Long) {
+        		log.fine("metricRetriever: Value is a long (" + metricName + ")");
+        		metricValue = JSONArrayAnalyzer(Temp_Array);
+        	}
+        	else {
+        		log.fine("Value already a double (" + metricName + ")");
+        		//metricValue = JSONArrayDoubleAnalyzer(Temp_Array);
+        		metricValue = JSONArrayAnalyzer(Temp_Array);
+        	}
+        	log.info(metricName + " : " + metricValue);
+        } catch (Exception exp){
+        	log.log(Level.SEVERE, exp.getMessage(), exp);
         }
-    	return averageMetric;
-    }
+		return metricValue;
+	}
 	
-    //Average JSON array results for double values
-	public static double JSONArrayDoubleAnalyzer (JSONArray array) {
+	
+    //Average JSON array results for double AND long values
+	public static double JSONArrayAnalyzer (JSONArray array) {
     	double totalMetric = 0;
     	double averageMetric = 0;
     	double denom = 0;
+    	Long longTemp;
+    	double doubleTemp = 0;
     	//Analyze array and return an average of results
     	for(int i=0; i<array.size(); i++){
-    		double temp = (double) array.get(i);
-    		totalMetric = totalMetric + temp;
+    		Object Temp_Array_Type = array.get(i);
+        	//Check to see if object is a long
+    		if (Temp_Array_Type instanceof Long) {
+        		longTemp = (long) array.get(i);
+        		log.finer("JSONArrayAnalyzer: Retrieved long value = " + longTemp);
+        		doubleTemp = longTemp.doubleValue();
+        		log.finer("JSONArrayAnalyzer: Newly converted double value = " + doubleTemp);
+        	}
+        	//Otherwise bring in as a double
+    		else {
+        		doubleTemp = (double) array.get(i);
+        		log.finer("JSONArrayAnalyzer: Retrieved double value = " + doubleTemp);
+        	}
+        	totalMetric = totalMetric + doubleTemp;
+    		log.finer("JSONArrayAnalyzer: totalMetric = " + totalMetric);
     		if (i>0)
     		{
     			denom = i+1;
     			averageMetric = totalMetric/denom;
     		}
         }
+    	log.fine("JSONArrayAnalyzer: averageMetric = " + averageMetric);
     	return averageMetric;
     }
 	
 	//Retrieve JSON metrics for local use
-	public long getItems()
+	public double getItems()
 	{
 		return items;
 	}
 	
-	public long getMemoryUsed()
+	public double getMemoryUsed()
 	{
 		return memoryUsed;
 	}
 	
-	public long getHighWatermark()
+	public double getHighWatermark()
 	{
 		return highWatermark;
 	}
 	
-	public long getCacheFetched()
+	public double getCacheFetched()
 	{
 		return cacheFetched;
 	}
 	
-	public long getCacheRetrieved()
+	public double getCacheRetrieved()
 	{
 		return cacheRetrieved;
 	}
 	
-	public long getActiveDocsResRatio()
+	public double getActiveDocsResRatio()
 	{
 		return activeDocsResRatio;
 	}
 	
-	public long getReplicaDocsResRatio()
+	public double getReplicaDocsResRatio()
 	{
 		return replicaDocsResRatio;
 	}
 	
-	public long getOOMPerSecond()
+	public double getOOMPerSecond()
 	{
 		return oomPerSecond;
 	}
 	
-	public long getTmpOOMPerSecond()
+	public double getTmpOOMPerSecond()
 	{
 		return tmpOOMPerSecond;
 	}
 	
-	public long getMemoryMax ()
+	public double getMemoryMax ()
 	{
 		return memoryMax;
 	}
 	
-	public long getDiskQueueSize()
+	public double getDiskQueueSize()
 	{
 		return diskQueueSize;
 	}
 	
-	public long getDiskQueueFlush()
+	public double getDiskQueueFlush()
 	{
 		return diskQueueFlush;
 	}
 	
-	public long getDiskReads()
+	public double getDiskReads()
 	{
 		return diskReads;
 	}
 	
-	public long getDiskWrites()
+	public double getDiskWrites()
 	{
 		return diskWrites;
 	}
 	
-	public long getDCPQueue()
+	public double getDCPQueue()
 	{
 		return dcpQueue;
 	}
 	
-	public long getActivevBucket()
+	public double getActivevBucket()
 	{
 		return activevBucket;
 	}
 	
-	public long getReplicavBucket()
+	public double getReplicavBucket()
 	{
 		return replicavBucket;
 	}
@@ -516,57 +316,57 @@ public class Overview {
 		return cpuUtilizationRate;
 	}
 	
-	public long getCurrConnections()
+	public double getCurrConnections()
 	{
 		return currConnections;
 	}
 	
-	public long getMemActualUsed()
+	public double getMemActualUsed()
 	{
 		return memActualUsed;
 	}
 	
-	public long getEPMemHighWat()
+	public double getEPMemHighWat()
 	{
 		return epMemHighWat;
 	}
 	
-	public long getCouchDocsFragmentation()
+	public double getCouchDocsFragmentation()
 	{
 		return couchDocsFragmentation;
 	}
 	
-	public long getCmdGet()
+	public double getCmdGet()
 	{
 		return cmdGet;
 	}
 	
-	public long getCmdSet()
+	public double getCmdSet()
 	{
 		return cmdSet;
 	}
 	
-	public long getCurrItems()
+	public double getCurrItems()
 	{
 		return currItems;
 	}
 	
-	public long getEPCacheMissRate()
+	public double getEPCacheMissRate()
 	{
 		return epCacheMissRate;
 	}
 	
-	public long getGetMisses()
+	public double getGetMisses()
 	{
 		return getMisses;
 	}
 	
-	public long getMisses()
+	public double getMisses()
 	{
 		return misses;
 	}
 	
-	public long getOps()
+	public double getOps()
 	{
 		return ops;
 	}

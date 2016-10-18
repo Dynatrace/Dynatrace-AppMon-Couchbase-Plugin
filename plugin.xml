@@ -21,7 +21,7 @@
           <item value="https" />
         </list>
       </property>
-      <property key="URL" label="URL" type="string" description="Path to the stream" default="/example/mystream.stream" multiline="false" />
+      <property key="URL" label="URL" type="string" description="Path to the stream" default="/pools/default/buckets/samples/stats" multiline="false" />
       <property key="Port" label="Port" type="string" description="Port on the server used by the restful interface." default="8091" multiline="false" />
       <property key="Bucket" label="Bucket Name" type="string" description="The name of the Bucket being monitored." default="samples" multiline="false" />
       <property key="auth" label="Authentication" type="boolean" description="Describes whether or not authentication is used for the URL." default="false" />
@@ -74,3 +74,4 @@
     </metricgroup>
   </extension>
 </plugin>
+
